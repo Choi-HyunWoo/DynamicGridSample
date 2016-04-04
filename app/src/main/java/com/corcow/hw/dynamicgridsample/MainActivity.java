@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction().add(R.id.container, new TestFragment()).commit();
     }
 
+    /*
     @Override
     public void onBackPressed() {
         if (gridView.isEditMode()) {
@@ -34,4 +35,5 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+    */
 }

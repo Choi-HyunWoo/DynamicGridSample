@@ -28,16 +28,18 @@ public class TestFragment extends Fragment {
     }
 
     DynamicGridView gridView;
+    MyDynamicGridAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_test, container, false);
+
+
         gridView = (DynamicGridView) view.findViewById(R.id.dynamicGridView);
+        mAdapter = new MyDynamicGridAdapter(getActivity(), new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings)), 3);
+        gridView.setAdapter(mAdapter);
 
-
-        gridView.setAdapter(new MyDynamicGridAdapter(getActivity(), new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings)), 3));
 //        add callback to stop edit mode if needed
 //        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
 //        {
@@ -64,6 +66,7 @@ public class TestFragment extends Fragment {
                 gridView.startEditMode(position);
                 return true;
             }
+
         });
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

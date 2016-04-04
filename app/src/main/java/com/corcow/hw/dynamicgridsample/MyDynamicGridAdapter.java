@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import org.askerov.dynamicgrid.BaseDynamicGridAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,9 +17,18 @@ import java.util.List;
  */
 public class MyDynamicGridAdapter extends BaseDynamicGridAdapter {
 
+    //ArrayList<String> items = new ArrayList<>();
+
     public MyDynamicGridAdapter(Context context, List<?> items, int columnCount) {
         super(context, items, columnCount);
     }
+
+    /*
+    @Override
+    public Object getItem(int position) {
+        return items.;
+    }
+    */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
