@@ -20,6 +20,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import java.util.*;
 
@@ -46,8 +47,8 @@ public class DynamicGridView extends GridView {
     private int mLastEventY = -1;
     private int mLastEventX = -1;
 
-    //used to distinguish straight line and diagonal switching
-    private int mOverlapIfSwitchStraightLine;
+    // used to distinguish straight line and diagonal switching
+    private int mOverlapIfSwitchStraightLine;           // 대각선 switching에 대한 구별 직선
 
     private List<Long> idList = new ArrayList<Long>();
 
@@ -88,7 +89,8 @@ public class DynamicGridView extends GridView {
     private DynamicGridModification mCurrentModification;
 
     private OnSelectedItemBitmapCreationListener mSelectedItemBitmapCreationListener;
-    private View mMobileView;
+
+    private View mMobileView;                                                                       // 얘를 CustomView로!!
 
 
     public DynamicGridView(Context context) {
@@ -278,7 +280,7 @@ public class DynamicGridView extends GridView {
         startWobbleAnimation();
     }
 
-    public void init(Context context) {
+    public void init(Context context) {                                                             // Line, Edge Initialize
         super.setOnScrollListener(mScrollListener);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         mSmoothScrollAmountAtEdge = (int) (SMOOTH_SCROLL_AMOUNT_AT_EDGE * metrics.density + 0.5f);
@@ -323,10 +325,11 @@ public class DynamicGridView extends GridView {
         return animator;
     }
 
-
-    private void reorderElements(int originalPosition, int targetPosition) {
+    // !!!!! REORDER
+    private void reorderElements(int originalPosition, int targetPosition) {                        // Reorder during Editmode ) originalPosition (변경전position) >> targetPosition (변경후position)
         if (mDragListener != null)
             mDragListener.onDragPositionsChanged(originalPosition, targetPosition);
+        Toast.makeText(getContext(), "reorderElements() : "+originalPosition+" -> "+targetPosition, Toast.LENGTH_SHORT).show();      // Toast TEST
         getAdapterInterface().reorderItems(originalPosition, targetPosition);
     }
 
@@ -372,7 +375,7 @@ public class DynamicGridView extends GridView {
         return bitmap;
     }
 
-
+    // !!!!!
     private void updateNeighborViewsForId(long itemId) {
         idList.clear();
         int draggedPos = getPositionForID(itemId);
@@ -677,11 +680,14 @@ public class DynamicGridView extends GridView {
 
     }
 
-    private void handleCellSwitch() {
-        final int deltaY = mLastEventY - mDownY;
-        final int deltaX = mLastEventX - mDownX;
-        final int deltaYTotal = mHoverCellOriginalBounds.centerY() + mTotalOffsetY + deltaY;
-        final int deltaXTotal = mHoverCellOriginalBounds.centerX() + mTotalOffsetX + deltaX;
+    // !!!!! Cell 바꾸기
+    private void handleCellSwitch() {                                                               // Cell 바꾸기 연산
+        // EditMode 에서 Drag중인 View의 x,y position이 조금이라도 바뀔때마다 호출
+        // 따라서 폴더/파일의 판정을 여기서!
+        final int deltaY = mLastEventY - mDownY;                                                    // Y값 변화
+        final int deltaX = mLastEventX - mDownX;                                                    // X값 변화
+        final int deltaYTotal = mHoverCellOriginalBounds.centerY() + mTotalOffsetY + deltaY;        // 전체 윈도우에서의 변화한 Y값
+        final int deltaXTotal = mHoverCellOriginalBounds.centerX() + mTotalOffsetX + deltaX;        //
         mMobileView = getViewForId(mMobileItemId);
         View targetView = null;
         float vX = 0;
@@ -737,11 +743,12 @@ public class DynamicGridView extends GridView {
 
             SwitchCellAnimator switchCellAnimator;
 
+            // Initialize Animator by Version
             if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
                 switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
             else if (isPreLollipop())                   //Before Android 3.0
                 switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
-            else                                //Android L
+            else                                        //Android L
                 switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
 
             updateNeighborViewsForId(mMobileItemId);
@@ -1136,5 +1143,6 @@ public class DynamicGridView extends GridView {
             return transitions;
         }
     }
+
 }
 

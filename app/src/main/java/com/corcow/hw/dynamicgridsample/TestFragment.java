@@ -1,6 +1,7 @@
 package com.corcow.hw.dynamicgridsample;
 
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -8,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.askerov.dynamicgrid.DynamicGridView;
@@ -40,6 +43,8 @@ public class TestFragment extends Fragment {
         mAdapter = new MyDynamicGridAdapter(getActivity(), new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings)), 3);
         gridView.setAdapter(mAdapter);
 
+
+
 //        add callback to stop edit mode if needed
 //        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
 //        {
@@ -58,6 +63,10 @@ public class TestFragment extends Fragment {
             @Override
             public void onDragPositionsChanged(int oldPosition, int newPosition) {
                 Log.d(TAG, String.format("drag item position changed from %d to %d", oldPosition, newPosition));
+                if (newPosition == 3) {
+                    Toast.makeText(getActivity(), "포지션"+newPosition, Toast.LENGTH_SHORT).show();
+                    
+                }
             }
         });
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
